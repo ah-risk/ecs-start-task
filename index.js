@@ -21,7 +21,8 @@ async function run() {
       const awsvpcConfiguration = {
         subnets: [
           subnet
-        ]
+        ],
+        assignPublicIp: "ENABLED"
       };
       if (securityGroup) {
         awsvpcConfiguration["securityGroups"] = [securityGroup];
