@@ -10,6 +10,9 @@ inputs:
   subnet:
     description: 'The subnet of the ECS task VPC'
     required: true
+  security-group:
+    description: 'The security group of the ECS task VPC'
+    required: false
   service:
     description: 'The name of the ECS service in which to start the task in.'
     required: false

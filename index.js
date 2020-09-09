@@ -10,6 +10,7 @@ async function run() {
     // Get inputs
     const taskDefinitionArn = core.getInput('task-definition', { required: true });
     const subnet = core.getInput("subnet", { required: true });
+    const securityGroup = core.getInput("security-group", { required: false });
     //const service = core.getInput('service', { required: false });
     const cluster = core.getInput('cluster', { required: false });
 
@@ -17,17 +18,21 @@ async function run() {
     core.debug('Starting the task');
     let startResponse;
     try {
+      const awsvpcConfiguration = {
+        subnets: [
+          subnet
+        ]
+      };
+      if (securityGroup) {
+        awsvpcConfiguration["securityGroups"] = [securityGroup];
+      }
       startResponse = await ecs.runTask({
         taskDefinition: taskDefinitionArn,
         cluster: (cluster ? cluster : "default"),
         count: 1,
         launchType: "FARGATE",
         networkConfiguration: {
-          awsvpcConfiguration: {
-            subnets: [
-              subnet
-            ]
-          }
+          awsvpcConfiguration: awsvpcConfiguration
         }
       }).promise();
     } catch (error) {
