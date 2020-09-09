@@ -1,0 +1,34 @@
+{
+  "name": "ecs-start-task",
+  "version": "0.1.0",
+  "description": "Starts an Amazon ECS task.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint **.js",
+    "package": "ncc build index.js -o dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ah-risk/ecs-start-task.git"
+  },
+  "keywords": [
+    "AWS",
+    "GitHub",
+    "Actions",
+    "JavaScript"
+  ],
+  "author": "Felix Henze",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ah-risk/ecs-start-task/issues"
+  },
+  "homepage": "https://github.com/ah-risk/ecs-start-task#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.5",
+    "aws-sdk": "^2.747.0"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.22.3",
+    "eslint": "^7.8.0"
+  }
+}

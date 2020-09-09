@@ -1,0 +1,18 @@
+name: 'Amazon ECS "Start Task" Action for GitHub Actions'
+description: 'Starts an Amazon ECS task'
+branding:
+  icon: 'cloud'
+  color: 'orange'
+inputs:
+  task-definition:
+    description: 'The arn to the ECS task definition'
+    required: true
+  service:
+    description: 'The name of the ECS service in which to start the task in.'
+    required: false
+  cluster:
+    description: "The name of the ECS service's cluster in which to start the task in.  Will default to the 'default' cluster"
+    required: false
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
