@@ -28,7 +28,7 @@ async function run() {
     }
     const parsedCommands = containerCommands ? JSON.parse(containerCommands) : {};
     let containerOverrides = [];
-    for (const k of parsedCommands) {
+    for (const k in parsedCommands) {
       containerOverrides.push({
         name: k,
         command: parsedCommands[k]
