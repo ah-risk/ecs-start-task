@@ -16,10 +16,11 @@ async function run() {
     core.debug('Starting the task');
     let startResponse;
     try {
-      startResponse = await ecs.startTask({
+      startResponse = await ecs.runTask({
         "taskDefinition": taskDefinitionArn,
         "cluster": (cluster ? cluster : "default"),
-        "containerInstances": []
+        "count": 1,
+        "launchType": "FARGATE"
       }).promise();
     } catch (error) {
       core.setFailed("Failed to start task definition in ECS: " + error.message);
