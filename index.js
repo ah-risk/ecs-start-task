@@ -9,6 +9,7 @@ async function run() {
 
     // Get inputs
     const taskDefinitionArn = core.getInput('task-definition', { required: true });
+    const subnet = core.getInput("subnet", { required: true });
     //const service = core.getInput('service', { required: false });
     const cluster = core.getInput('cluster', { required: false });
 
@@ -17,10 +18,17 @@ async function run() {
     let startResponse;
     try {
       startResponse = await ecs.runTask({
-        "taskDefinition": taskDefinitionArn,
-        "cluster": (cluster ? cluster : "default"),
-        "count": 1,
-        "launchType": "FARGATE"
+        taskDefinition: taskDefinitionArn,
+        cluster: (cluster ? cluster : "default"),
+        count: 1,
+        launchType: "FARGATE",
+        networkConfiguration: {
+          awsvpcConfiguration: {
+            subnets: [
+              subnet
+            ]
+          }
+        }
       }).promise();
     } catch (error) {
       core.setFailed("Failed to start task definition in ECS: " + error.message);

@@ -7,6 +7,9 @@ inputs:
   task-definition:
     description: 'The arn to the ECS task definition'
     required: true
+  subnet:
+    description: 'The subnet of the ECS task VPC'
+    required: true
   service:
     description: 'The name of the ECS service in which to start the task in.'
     required: false
