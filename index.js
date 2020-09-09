@@ -41,7 +41,7 @@ async function run() {
       core.debug("Task definition: " + taskDefinitionArn);
       throw(error);
     }
-    core.setOutput(startResponse[0].taskArn);
+    core.setOutput(startResponse.tasks[0].taskArn);
     core.debug(startResponse);
   }
   catch (error) {
