@@ -34,7 +34,8 @@ async function run() {
         launchType: "FARGATE",
         networkConfiguration: {
           awsvpcConfiguration: awsvpcConfiguration
-        }
+        },
+        startedBy: "GitHub-Action"
       }).promise();
     } catch (error) {
       core.setFailed("Failed to start task definition in ECS: " + error.message);
