@@ -13,30 +13,42 @@ async function run() {
     const securityGroup = core.getInput("security-group", { required: false });
     //const service = core.getInput('service', { required: false });
     const cluster = core.getInput('cluster', { required: false });
+    const containerCommands = core.getInput("container-commands", { required: false });
 
     // Try to start the task
     core.debug('Starting the task');
+    const awsvpcConfiguration = {
+      subnets: [
+        subnet
+      ],
+      assignPublicIp: "ENABLED"
+    };
+    if (securityGroup) {
+      awsvpcConfiguration["securityGroups"] = [securityGroup];
+    }
+    const parsedCommands = containerCommands ? JSON.parse(containerCommands) : {};
+    let containerOverrides = [];
+    for (const k of parsedCommands) {
+      containerOverrides.push({
+        name: k,
+        command: parsedCommands[k]
+      });
+    }
+    const overrides = containerOverrides.length > 0 ? { containerOverrides: containerOverrides } : {};
+    const params = {
+      taskDefinition: taskDefinitionArn,
+      cluster: (cluster ? cluster : "default"),
+      count: 1,
+      launchType: "FARGATE",
+      networkConfiguration: {
+        awsvpcConfiguration: awsvpcConfiguration
+      },
+      startedBy: "GitHub-Action",
+      overrides: overrides
+    };
     let startResponse;
     try {
-      const awsvpcConfiguration = {
-        subnets: [
-          subnet
-        ],
-        assignPublicIp: "ENABLED"
-      };
-      if (securityGroup) {
-        awsvpcConfiguration["securityGroups"] = [securityGroup];
-      }
-      startResponse = await ecs.runTask({
-        taskDefinition: taskDefinitionArn,
-        cluster: (cluster ? cluster : "default"),
-        count: 1,
-        launchType: "FARGATE",
-        networkConfiguration: {
-          awsvpcConfiguration: awsvpcConfiguration
-        },
-        startedBy: "GitHub-Action"
-      }).promise();
+      startResponse = await ecs.runTask(params).promise();
     } catch (error) {
       core.setFailed("Failed to start task definition in ECS: " + error.message);
       core.debug("Task definition: " + taskDefinitionArn);
