@@ -19,6 +19,9 @@ inputs:
   cluster:
     description: "The name of the ECS service's cluster in which to start the task in.  Will default to the 'default' cluster"
     required: false
+outputs:
+  task-arn:
+    description: 'The ARN of the started task'
 runs:
   using: 'node12'
   main: 'dist/index.js'
