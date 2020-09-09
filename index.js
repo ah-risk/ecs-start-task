@@ -48,6 +48,7 @@ async function run() {
     };
     let startResponse;
     try {
+      core.debug(params);
       startResponse = await ecs.runTask(params).promise();
     } catch (error) {
       core.setFailed("Failed to start task definition in ECS: " + error.message);
