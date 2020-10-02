@@ -64,7 +64,9 @@ async function run() {
       const tasks = [startResponse.tasks[0].taskArn];
       try {
         core.debug("Describing tasks: " + tasks);
-        console.log(await ecs.describeTasks({ cluster: startResponse.clusterArn, tasks }).promise());
+        const descr = await ecs.describeTasks({ cluster: startResponse.clusterArn, tasks }).promise();
+        console.log(descr);
+        
         stopResponse = await ecs.waitFor("tasksStopped", { cluster: startResponse.clusterArn, tasks }).promise();
         if (stopResponse.tasks.length <= 0) core.setFailed("No stopped tasks");
         const containers = stopResponse.tasks[0].containers;
