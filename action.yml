@@ -22,6 +22,9 @@ inputs:
   container-commands:
     description: "JSON mapping from container names to container commands"
     required: false
+  wait-for-task:
+    description: "Whether to wait for the task to finish"
+    required: false
 outputs:
   task-arn:
     description: 'The ARN of the started task'

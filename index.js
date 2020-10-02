@@ -14,6 +14,7 @@ async function run() {
     //const service = core.getInput('service', { required: false });
     const cluster = core.getInput('cluster', { required: false });
     const containerCommands = core.getInput("container-commands", { required: false });
+    const waitForTask = core.getInput("wait-for-task", { required: false });
 
     // Try to start the task
     core.debug('Starting the task');
@@ -57,6 +58,24 @@ async function run() {
     }
     core.setOutput(startResponse.tasks[0].taskArn);
     core.debug(startResponse);
+
+    if (waitForTask) {
+      let stopResponse;
+      const tasks = [startResponse.tasks[0].taskArn];
+      try {
+        stopResponse = await ecs.waitFor("tasksStopped", { tasks }).promise();
+        if (stopResponse.tasks.length <= 0) core.setFailed("No stopped tasks");
+        const containers = stopResponse.tasks[0].containers;
+        if (containers.length <= 0) core.setFailed("No stopped containers");
+        if (containers.some(c => c.exitCode !== 0)) {
+          core.setFailed("Some containers finished with error exit codes.");
+        }
+      } catch (error) {
+        core.setFailed("Failed to wait for task stopping: " + error.message);
+        core.debug("Stop response: " + stopResponse);
+        throw(error);
+      }
+    }
   }
   catch (error) {
     core.setFailed(error.message);
